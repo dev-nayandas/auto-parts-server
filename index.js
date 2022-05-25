@@ -40,6 +40,17 @@ async function run() {
       const reviews = await cursor.toArray()
       res.send(reviews)
     })
+    app.get('/users', async (req,res)=>{
+      const query = {};
+      const cursor = userCollection.find(query)
+      const users= await cursor.toArray()
+      res.send(users)
+    })
+
+    // app.get('/users', async (req, res)=>{
+    //   const users = await userCollection.find().toArray();
+    //   res.send(users)
+    // })
 
     app.put('/user/:email' , async(req, res)=>{
       const email = req.params.email;
