@@ -1,7 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 require('dotenv').config();
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const app = express();
 const port = process.env.PORT || 5000;
 
@@ -51,6 +51,16 @@ async function run() {
     //   const users = await userCollection.find().toArray();
     //   res.send(users)
     // })
+
+    app.put('/user/admin/:email' , async(req, res)=>{
+      const email = req.params.email;
+      const fiter = {email:email};
+      const updateDoc = {
+        $set : {role: 'admin'},
+      };
+      const result = await userCollection.updateOne(fiter,updateDoc);
+      res.send(result)
+    })
 
     app.put('/user/:email' , async(req, res)=>{
       const email = req.params.email;
