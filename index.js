@@ -16,9 +16,13 @@ async function run() {
 
   try {
     await client.connect();
+    // Browercollection is here
     const partsCollection =client.db('auto-parts').collection('parts');
     const reviewsCollection =client.db('auto-parts').collection('reviews');
     const userCollection =client.db('auto-parts').collection('users');
+
+
+    
 
     app.get('/parts', async (req,res)=>{
       const query = {};
