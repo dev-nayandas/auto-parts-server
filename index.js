@@ -23,7 +23,7 @@ async function run() {
 
 
     
-
+// get api here
     app.get('/parts', async (req,res)=>{
       const query = {};
       const cursor = partsCollection.find(query)
@@ -56,6 +56,7 @@ async function run() {
     //   res.send(users)
     // })
 
+    // make admin api here
     app.put('/user/admin/:email' , async(req, res)=>{
       const email = req.params.email;
       const fiter = {email:email};
