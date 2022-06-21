@@ -20,6 +20,7 @@ async function run() {
     const partsCollection =client.db('auto-parts').collection('parts');
     const reviewsCollection =client.db('auto-parts').collection('reviews');
     const userCollection =client.db('auto-parts').collection('users');
+    const bookingCollection =client.db('auto-parts').collection('booking');
 
 
     
@@ -44,6 +45,36 @@ async function run() {
       const reviews = await cursor.toArray()
       res.send(reviews)
     })
+
+    app.post('/reviews', async(req, res) =>{
+      const newReview = req.body;
+      const result = await reviewsCollection.insertOne(newReview);
+      res.send(result);
+  });
+
+
+
+    // app.post('/reviews', async (req,res)=>{
+    //   const newReview = req.body;
+    //   const result = await reviewsCollection.find(newReview )
+    //   res.send(result)
+    // })
+
+    app.get('/booking', async(req,res)=>{
+      const email = req.query.email;
+      const query = {email: email};
+      const booking = await bookingCollection.find(query).toArray();
+      res.send(booking)
+
+    })
+
+    // app.get('/booking', async (req,res)=>{
+    //   const email = req.query.email;
+    //   const query = {email:email};
+    //   const cursor = bookingCollection.find(query)
+    //   const booking= await cursor.toArray()
+    //   res.send(booking)
+    // })
     app.get('/users', async (req,res)=>{
       const query = {};
       const cursor = userCollection.find(query)
@@ -57,13 +88,22 @@ async function run() {
     // })
 
     // make admin api here
-    app.put('/user/admin/:email' , async(req, res)=>{
+
+
+    app.get('/admin/:email', async (req, res)=>{
       const email = req.params.email;
+      const user = await userCollection.findOne({ email: email });
+      const isAdmin = user.role === 'admin';
+      res.send({admin : isAdmin});
+    })
+    app.put('/users/admin/:email' , async(req, res)=>{
+      const email = req.params.email;
+      
       const fiter = {email:email};
       const updateDoc = {
         $set : {role: 'admin'},
       };
-      const result = await userCollection.updateOne(fiter,updateDoc);
+      const result = await userCollection.updateOne(fiter, updateDoc);
       res.send(result)
     })
 
@@ -76,6 +116,18 @@ async function run() {
         $set : user,
       };
       const result = await userCollection.updateOne(fiter,updateDoc,options);
+      res.send(result)
+    })
+
+
+
+
+
+    // booking
+
+    app.post('/booking' , async (req,res)=>{
+      const booking = req.body;
+      const result = await bookingCollection.insertOne(booking);
       res.send(result)
     })
 
